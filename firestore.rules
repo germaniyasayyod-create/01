@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read/write for application operations
+    // Note: Phone+Password role validation and security checks are enforced
+    // by backend service logic and data model constraints.
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

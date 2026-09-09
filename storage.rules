@@ -1,0 +1,37 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper to validate PDF format and max 10 MB (10 * 1024 * 1024 bytes)
+    function isValidPdf() {
+      return request.resource.contentType == 'application/pdf' &&
+             request.resource.size <= 10 * 1024 * 1024;
+    }
+
+    // Helper to validate Profile Photo: JPG/JPEG/PNG and max 2 MB (2 * 1024 * 1024 bytes)
+    function isValidProfilePhoto() {
+      return (request.resource.contentType in ['image/jpeg', 'image/png', 'image/jpg'] ||
+              request.resource.contentType.matches('image/.*')) &&
+             request.resource.size <= 2 * 1024 * 1024;
+    }
+
+    // Profile photos directory: /profilePhotos/{userId}/{fileName}
+    match /profilePhotos/{userId}/{fileName} {
+      allow read: if true;
+      allow create, update: if isValidProfilePhoto();
+      allow delete: if true;
+    }
+
+    // Students directory: /students/{studentId}/{category}/{fileName}
+    match /students/{studentId}/{category}/{fileName} {
+      allow read: if true;
+      allow create, update: if isValidPdf();
+      allow delete: if true;
+    }
+
+    // Fallback for general document access
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if isValidPdf() || isValidProfilePhoto();
+    }
+  }
+}

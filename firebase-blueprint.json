@@ -1,0 +1,170 @@
+{
+  "entities": {
+    "UserAccount": {
+      "title": "UserAccount",
+      "description": "Foydalanuvchi akkaunti va xavfsizlik ma'lumotlari",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "phone": { "type": "string" },
+        "passwordHash": { "type": "string" },
+        "salt": { "type": "string" },
+        "role": { "type": "string", "enum": ["superAdmin", "admin", "student", "supervisor"] },
+        "fullName": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "phone", "role", "fullName", "isActive", "createdAt"]
+    },
+    "StudentProfile": {
+      "title": "StudentProfile",
+      "description": "Iqtidorli talabaning to'liq profili",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "fullName": { "type": "string" },
+        "phone": { "type": "string" },
+        "course": { "type": "number" },
+        "group": { "type": "string" },
+        "facultyOrField": { "type": "string" },
+        "supervisorId": { "type": "string" },
+        "customSupervisorName": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "fullName", "phone", "course", "group", "facultyOrField"]
+    },
+    "SupervisorProfile": {
+      "title": "SupervisorProfile",
+      "description": "Ilmiy rahbar profili",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fullName": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "position": { "type": "string" },
+        "academicDegree": { "type": "string" },
+        "department": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "fullName", "phone", "position", "department"]
+    },
+    "EventItem": {
+      "title": "EventItem",
+      "description": "Universitet tadbirlari va anjumanlari",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "location": { "type": "string" },
+        "deadline": { "type": "string" },
+        "status": { "type": "string" },
+        "participantIds": { "type": "array" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "description", "date", "status"]
+    },
+    "EventRegistration": {
+      "title": "EventRegistration",
+      "description": "Tadbirga ro'yxatdan o'tgan iqtidorli talabalar ma'lumotlari",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "eventId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "registeredAt": { "type": "string" },
+        "status": { "type": "string" },
+        "studentName": { "type": "string" },
+        "studentPhone": { "type": "string" },
+        "studentCourse": { "type": "number" },
+        "studentGroup": { "type": "string" },
+        "studentFaculty": { "type": "string" },
+        "supervisorName": { "type": "string" }
+      },
+      "required": ["id", "eventId", "studentId", "registeredAt", "status"]
+    },
+    "ProjectOrStartup": {
+      "title": "ProjectOrStartup",
+      "description": "Talabaning ilmiy loyihasi yoki startap tashabbusi",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "type", "title", "studentId", "status"]
+    },
+    "Achievement": {
+      "title": "Achievement",
+      "description": "Talabaning yutuq va natijalari",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "date": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "studentId", "title", "status"]
+    },
+    "CertificateItem": {
+      "title": "CertificateItem",
+      "description": "Rasmiy sertifikatlar",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "certificateNumber": { "type": "string" },
+        "title": { "type": "string" },
+        "studentId": { "type": "string" },
+        "issueDate": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "certificateNumber", "title", "studentId", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserAccount",
+      "description": "Tizim foydalanuvchilari"
+    },
+    "/students/{studentId}": {
+      "schema": "StudentProfile",
+      "description": "Iqtidorli talabalar profili"
+    },
+    "/supervisors/{supervisorId}": {
+      "schema": "SupervisorProfile",
+      "description": "Ilmiy rahbarlar"
+    },
+    "/events/{eventId}": {
+      "schema": "EventItem",
+      "description": "Tadbirlar"
+    },
+    "/eventRegistrations/{registrationId}": {
+      "schema": "EventRegistration",
+      "description": "Tadbir ishtirokchilari ro'yxatdan o'tish yozuvlari"
+    },
+    "/projects/{projectId}": {
+      "schema": "ProjectOrStartup",
+      "description": "Loyihalar va startaplar"
+    },
+    "/achievements/{achievementId}": {
+      "schema": "Achievement",
+      "description": "Yutuqlar"
+    },
+    "/certificates/{certificateId}": {
+      "schema": "CertificateItem",
+      "description": "Sertifikatlar"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+name: Sync GitHub 1 to GitHub 2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GitHub 1
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Sync to GitHub 2
+        env:
+          GH2_TOKEN: ${{ secrets.GH2_TOKEN }}
+        run: |
+          set -e
+
+          git config user.name "GitHub Sync Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git remote add destination "https://x-access-token:${GH2_TOKEN}@github.com/SarvarMuzaffarov/001.git"
+
+          git push destination HEAD:main
